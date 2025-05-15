@@ -2,8 +2,8 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-// NextAuth.js setup
-export const handler = NextAuth({
+// NextAuth.js setup configuration
+const authOptions = {
   providers: [
     CredentialsProvider({
       name: 'Credentials',
@@ -22,12 +22,29 @@ export const handler = NextAuth({
     })
   ],
   pages: {
-    signIn: '/login', // Redirect to the login page
+    signIn: '/login',
+  },
+  callbacks: {
+    async jwt({ token, user }) {
+      // Add user data to the token if available
+      if (user) {
+        token.user = user;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      // Add user data from token to the session
+      session.user = token.user;
+      return session;
+    }
   },
   session: {
-    strategy: "jwt", // Use JWT strategy for sessions
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
-});
+  secret: process.env.NEXTAUTH_SECRET || "your-super-secret-key-change-this-in-production",
+};
 
-// Export GET and POST methods to handle requests
+const handler = NextAuth(authOptions);
+
 export { handler as GET, handler as POST };

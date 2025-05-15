@@ -1,22 +1,21 @@
 // app/layout.js
-'use client'  // <-- Ensure this is a Client Component
+'use client'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { SessionProvider } from 'next-auth/react';  // Import SessionProvider from next-auth
-import './styles/globals.css'; 
+import './styles/globals.css';
+import { SessionProvider } from 'next-auth/react';
 
-export default function Layout({ children }) {
+export default function RootLayout({ children }) {
   return (
-    <SessionProvider>
-      <html lang="en">
-        <head />
-        <body>
-          <div className="container-fluid">
-            <div className="row">
+    <html lang="en">
+      <body>
+        <SessionProvider>
+          <div className="container-fluid p-0">
+            <div className="row g-0">
               {children}
             </div>
           </div>
-        </body>
-      </html>
-    </SessionProvider>
+        </SessionProvider>
+      </body>
+    </html>
   );
 }
